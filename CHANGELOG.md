@@ -1,5 +1,11 @@
 # url-synched-state
 
+## 0.1.1
+
+### Patch Changes
+
+- Update github actions
+
 ## 0.1.0
 
 ### Minor Changes
