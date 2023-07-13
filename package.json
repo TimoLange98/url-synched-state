@@ -1,0 +1,23 @@
+{
+  "name": "url-synched-state",
+  "version": "0.0.0",
+  "description": "Hook for synchronizing local state with the search-params of the current url",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "lint": "tsc"
+  },
+  "author": "Timo Lange",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-router-dom": "^6.14.1"
+  },
+  "devDependencies": {
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
+  }
+}
