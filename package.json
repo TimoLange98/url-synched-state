@@ -1,6 +1,6 @@
 {
   "name": "url-synched-state",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Hook for synchronizing local state with the search-params of the current url",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
