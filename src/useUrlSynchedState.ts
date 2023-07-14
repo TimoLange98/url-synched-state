@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-const useUrlSyncedState = <T extends Record<string, any>>(initial: T): [T, <K extends keyof T>(key: K, newVal: string) => void] => {
+const useUrlSyncedState = <T extends Record<string, string | number | Array<string | number>>>(initial: T): [T, <K extends keyof T>(key: K, newVal: T[K]) => void] => {
   const [state, _setState] = useState<T>(initial)
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -19,7 +20,15 @@ const useUrlSyncedState = <T extends Record<string, any>>(initial: T): [T, <K ex
       let updatedState = initial
 
       urlParams.forEach(p => {
-        updatedState = { ...updatedState, [p.key as keyof T]: p.val }
+        let val: any = p.val!
+
+        // Deconstruct array type
+        if (p.val!.startsWith('%A%')) {
+          const stringValue = p.val!.slice(3, p.val!.length)
+          val = stringValue.trim().split(',')
+        }
+
+        updatedState = { ...updatedState, [p.key as keyof T]: val }
       })
 
       _setState(updatedState)
@@ -29,15 +38,22 @@ const useUrlSyncedState = <T extends Record<string, any>>(initial: T): [T, <K ex
     const keys = Object.keys(initial).filter(k => !urlParams.map(p => p.key).includes(k))
 
     // Constructing the search params from these keys
-    const initialParams = keys.map(key => ({ key, val: String(initial[key]) }))
+    const initialParams = keys.map(key => {
+      let val = String(initial[key])
+
+      // Prefix array type 
+      if (Array.isArray(initial[key])) val = `%A%${val}`
+      
+      return { key, val }
+    })
 
     // Append the search params from the initial state-object
     initialParams.forEach(p => appendSearchParam(p.key, p.val))
   }, [])
 
   // setState function
-  const setState = <K extends keyof T>(key: K, newVal: string) => {
-    appendSearchParam(key as string, newVal)
+  const setState = <K extends keyof T>(key: K, newVal: T[K]) => {
+    appendSearchParam(key as string, String(newVal))
 
     _setState(prev => ({
       ...prev,
