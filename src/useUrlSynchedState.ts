@@ -23,7 +23,7 @@ const useUrlSyncedState = <T extends Record<string, string | number | Array<stri
         let val: any = p.val!
 
         // Deconstruct array type
-        if (p.val!.startsWith('%A%')) {
+        if (p.val!.startsWith('#A#')) {
           const stringValue = p.val!.slice(3, p.val!.length)
           val = stringValue.trim().split(',')
         }
@@ -35,14 +35,14 @@ const useUrlSyncedState = <T extends Record<string, string | number | Array<stri
     }
 
     // All property-keys from the initial state-object that do not have values in the url params
-    const keys = Object.keys(initial).filter(k => !urlParams.map(p => p.key).includes(k))
+    const keys = Object.keys(initial).filter(key => !urlParams.map(p => p.key).includes(key))
 
     // Constructing the search params from these keys
     const initialParams = keys.map(key => {
       let val = String(initial[key])
 
       // Prefix array type 
-      if (Array.isArray(initial[key])) val = `%A%${val}`
+      if (Array.isArray(initial[key])) val = `#A#${val}`
       
       return { key, val }
     })
